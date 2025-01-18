@@ -1,0 +1,64 @@
+basePath: /api/v1
+definitions:
+  domain.Card:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/domain.Tag'
+        type: array
+      title:
+        maxLength: 255
+        minLength: 1
+        type: string
+      updated_at:
+        type: string
+    required:
+    - title
+    type: object
+  domain.Tag:
+    properties:
+      id:
+        type: string
+      name:
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - name
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Server for Flashcards application
+  title: Flashcards API
+  version: "1.0"
+paths:
+  /cards:
+    post:
+      consumes:
+      - application/json
+      description: Create a new flashcard with title and description
+      parameters:
+      - description: Card object
+        in: body
+        name: card
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Card'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Card'
+      summary: Create a new card
+      tags:
+      - cards
+swagger: "2.0"
