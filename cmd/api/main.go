@@ -42,12 +42,15 @@ func main() {
 
 	// Initialize repositories
 	cardRepo := repository.NewCardRepository(db)
+	tagRepo := repository.NewTagRepository(db)
 
 	// Initialize services
 	cardService := service.NewCardService(cardRepo)
+	tagService := service.NewTagService(tagRepo)
 
 	// Initialize handlers
 	cardHandler := handler.NewCardHandler(cardService)
+	tagHandler := handler.NewTagHandler(tagService)
 
 	// Setup router
 	r := gin.Default()
@@ -58,6 +61,13 @@ func main() {
 		{
 			cards.POST("/", cardHandler.CreateCard)
 			// Add other routes here
+		}
+		tags := v1.Group("/tags")
+		{
+			tags.POST("/", tagHandler.CreateTag)
+			tags.GET("/:id", tagHandler.GetTag)
+			tags.PUT("/:id", tagHandler.UpdateTag)
+			tags.GET("/", tagHandler.ListTags)
 		}
 	}
 

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type CardHandler struct {
@@ -30,6 +31,10 @@ func (h *CardHandler) CreateCard(c *gin.Context) {
 	if err := c.ShouldBindJSON(&card); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	if card.ID == uuid.Nil {
+		card.ID = uuid.New()
 	}
 
 	if err := h.cardService.CreateCard(c.Request.Context(), &card); err != nil {

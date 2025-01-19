@@ -1,0 +1,23 @@
+@url = http://localhost:8081
+
+### Create a new tag
+POST {{url}}/api/v1/tags
+Content-Type: application/json
+
+{
+    "name": "Sample Tag 1"
+}
+
+### GET all tags
+GET {{url}}/api/v1/tags
+
+### GET a tag by id
+GET {{url}}/api/v1/tags/550e8400-e29b-41d4-a716-446655440000
+
+### Update a tag
+PUT {{url}}/api/v1/tags/550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json
+
+{
+    "name": "Sample Tag 1 Updated"
+}
