@@ -13,7 +13,8 @@ type CardRepository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*domain.Card, error)
 	Update(ctx context.Context, card *domain.Card) error
 	Delete(ctx context.Context, id uuid.UUID) error
-	List(ctx context.Context) ([]domain.Card, error)
+	ListCards(ctx context.Context) ([]domain.Card, error)
+	GetTagsByIds(ctx context.Context, ids []uuid.UUID, tags *[]domain.Tag) error
 	//FindByTags(ctx context.Context, tags []string) ([]domain.Card, error)
 }
 
@@ -46,8 +47,16 @@ func (r *cardRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	return r.db.WithContext(ctx).Delete(&domain.Card{}, "id = ?", id).Error
 }
 
-func (r *cardRepository) List(ctx context.Context) ([]domain.Card, error) {
+func (r *cardRepository) ListCards(ctx context.Context) ([]domain.Card, error) {
 	var cards []domain.Card
-	err := r.db.WithContext(ctx).Find(&cards).Error
-	return cards, err
+	if err := r.db.WithContext(ctx).
+		Preload("Tags").
+		Find(&cards).Error; err != nil {
+		return nil, err
+	}
+	return cards, nil
+}
+
+func (r *cardRepository) GetTagsByIds(ctx context.Context, ids []uuid.UUID, tags *[]domain.Tag) error {
+	return r.db.WithContext(ctx).Where("id IN ?", ids).Find(tags).Error
 }

@@ -45,7 +45,7 @@ func main() {
 	tagRepo := repository.NewTagRepository(db)
 
 	// Initialize services
-	cardService := service.NewCardService(cardRepo)
+	cardService := service.NewCardService(cardRepo, tagRepo)
 	tagService := service.NewTagService(tagRepo)
 
 	// Initialize handlers

@@ -1,5 +1,5 @@
 @url = http://localhost:8081
-@cardId = 2d134b81-5556-41bc-8e19-29b1f8e41fd3
+@cardId = e6369048-7ff4-4e6e-9f3f-1f0447cdeb52
 
 ### Create a new card
 POST {{url}}/api/v1/cards
@@ -7,12 +7,12 @@ Content-Type: application/json
 
 {
     "title": "Sample Card",
-    "description": "This is a sample card description",
+    "description": "1 This is a sample card description",
     "tags": [
-        {
-            "id": "550e8400-e29b-41d4-a716-446655440000"
-        }
-    ]
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000"
+    }
+  ]
 }
 
 ### Get all cards

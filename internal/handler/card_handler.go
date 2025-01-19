@@ -33,11 +33,16 @@ func (h *CardHandler) CreateCard(c *gin.Context) {
 		return
 	}
 
+	var tagIDs []uuid.UUID
+	for _, t := range card.Tags {
+		tagIDs = append(tagIDs, t.ID)
+	}
+
 	if card.ID == uuid.Nil {
 		card.ID = uuid.New()
 	}
 
-	if err := h.cardService.CreateCard(c.Request.Context(), &card); err != nil {
+	if err := h.cardService.CreateCard(c.Request.Context(), &card, tagIDs); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

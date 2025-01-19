@@ -13,24 +13,33 @@ import (
 )
 
 type CardService interface {
-	CreateCard(ctx context.Context, card *domain.Card) error
 	GetCard(ctx context.Context, id uuid.UUID) (*domain.Card, error)
 	UpdateCard(ctx context.Context, card *domain.Card) error
 	DeleteCard(ctx context.Context, id uuid.UUID) error
 	ListCards(ctx context.Context) ([]domain.Card, error)
-	//FindCardsByTags(ctx context.Context, tags []string) ([]domain.Card, error)
+	CreateCard(ctx context.Context, card *domain.Card, tagIDs []uuid.UUID) error
 	CreateDatabase(ctx context.Context) error
 }
 
 type cardService struct {
-	repo repository.CardRepository
+	repo    repository.CardRepository
+	tagRepo repository.TagRepository
 }
 
-func NewCardService(repo repository.CardRepository) CardService {
-	return &cardService{repo: repo}
+func NewCardService(repo repository.CardRepository, tagRepo repository.TagRepository) CardService {
+	return &cardService{repo: repo, tagRepo: tagRepo}
 }
 
-func (s *cardService) CreateCard(ctx context.Context, card *domain.Card) error {
+// func (s *cardService) CreateCard(ctx context.Context, card *domain.Card) error {
+// 	return s.repo.Create(ctx, card)
+// }
+
+func (s *cardService) CreateCard(ctx context.Context, card *domain.Card, tagIDs []uuid.UUID) error {
+	var tags []domain.Tag
+	if err := s.repo.GetTagsByIds(ctx, tagIDs, &tags); err != nil {
+		return err
+	}
+	card.Tags = tags
 	return s.repo.Create(ctx, card)
 }
 
@@ -47,7 +56,7 @@ func (s *cardService) DeleteCard(ctx context.Context, id uuid.UUID) error {
 }
 
 func (s *cardService) ListCards(ctx context.Context) ([]domain.Card, error) {
-	return s.repo.List(ctx)
+	return s.repo.ListCards(ctx)
 }
 
 func (s *cardService) CreateDatabase(ctx context.Context) error {
