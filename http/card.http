@@ -1,5 +1,5 @@
 @url = http://localhost:8081
-@cardId = af2488c7-1b1e-4c4b-a479-f377d3310ff4
+@cardId = ff32e99f-575b-473f-bc82-ca2fb46ae76c
 
 ### Create a new card
 POST {{url}}/api/v1/cards
