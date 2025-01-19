@@ -35,12 +35,17 @@ func (r *cardRepository) Create(ctx context.Context, card *domain.Card) error {
 
 func (r *cardRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Card, error) {
 	var card domain.Card
-	err := r.db.WithContext(ctx).First(&card, "id = ?", id).Error
+	err := r.db.WithContext(ctx).
+		Preload("Tags").
+		First(&card, "id = ?", id).Error
 	return &card, err
 }
 
 func (r *cardRepository) Update(ctx context.Context, card *domain.Card) error {
-	return r.db.WithContext(ctx).Save(card).Error
+	if err := r.db.WithContext(ctx).Save(card).Error; err != nil {
+		return err
+	}
+	return r.db.WithContext(ctx).Preload("Tags").First(card, "id = ?", card.ID).Error
 }
 
 func (r *cardRepository) Delete(ctx context.Context, id uuid.UUID) error {

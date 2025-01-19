@@ -28,6 +28,11 @@ Content-Type: application/json
 {
     "title": "Updated Test Card",
     "description": "This is an updated test card description",
+    "tags": [
+    {
+      "id": "7f581524-3f3f-4743-87dd-cc7c64e689d7"
+    }
+]
 }
 
 ### Delete a card
