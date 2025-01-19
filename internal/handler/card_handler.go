@@ -78,10 +78,14 @@ func (h *CardHandler) UpdateCard(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	card.ID = id
 
-	if err := h.cardService.UpdateCard(c.Request.Context(), &card); err != nil {
+	var tagIDs []uuid.UUID
+	for _, t := range card.Tags {
+		tagIDs = append(tagIDs, t.ID)
+	}
+
+	if err := h.cardService.UpdateCard(c.Request.Context(), &card, tagIDs); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

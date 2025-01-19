@@ -1,5 +1,5 @@
 @url = http://localhost:8081
-@cardId = e6369048-7ff4-4e6e-9f3f-1f0447cdeb52
+@cardId = af2488c7-1b1e-4c4b-a479-f377d3310ff4
 
 ### Create a new card
 POST {{url}}/api/v1/cards
@@ -29,10 +29,13 @@ Content-Type: application/json
     "title": "Updated Test Card",
     "description": "This is an updated test card description",
     "tags": [
-    {
-      "id": "7f581524-3f3f-4743-87dd-cc7c64e689d7"
-    }
-]
+        {
+            "id": "6adb4496-75f9-4c62-b8b6-076fd391aefd"
+        },
+        {
+            "id": "2fd8361e-008b-4e65-90bd-0f139a3cdc11"
+        }
+    ]
 }
 
 ### Delete a card

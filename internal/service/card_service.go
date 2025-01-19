@@ -14,7 +14,7 @@ import (
 
 type CardService interface {
 	GetCard(ctx context.Context, id uuid.UUID) (*domain.Card, error)
-	UpdateCard(ctx context.Context, card *domain.Card) error
+	UpdateCard(ctx context.Context, card *domain.Card, tagIDs []uuid.UUID) error
 	DeleteCard(ctx context.Context, id uuid.UUID) error
 	ListCards(ctx context.Context) ([]domain.Card, error)
 	CreateCard(ctx context.Context, card *domain.Card, tagIDs []uuid.UUID) error
@@ -47,7 +47,13 @@ func (s *cardService) GetCard(ctx context.Context, id uuid.UUID) (*domain.Card, 
 	return s.repo.GetByID(ctx, id)
 }
 
-func (s *cardService) UpdateCard(ctx context.Context, card *domain.Card) error {
+func (s *cardService) UpdateCard(ctx context.Context, card *domain.Card, tagIDs []uuid.UUID) error {
+	var tags []domain.Tag
+
+	if err := s.repo.GetTagsByIds(ctx, tagIDs, &tags); err != nil {
+		return err
+	}
+	card.Tags = tags
 	return s.repo.Update(ctx, card)
 }
 

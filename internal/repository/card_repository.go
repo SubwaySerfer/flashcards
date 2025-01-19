@@ -42,10 +42,29 @@ func (r *cardRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Car
 }
 
 func (r *cardRepository) Update(ctx context.Context, card *domain.Card) error {
-	if err := r.db.WithContext(ctx).Save(card).Error; err != nil {
+	// Start a transaction
+	tags := card.Tags
+	tx := r.db.WithContext(ctx).Begin()
+
+	// Delete old tags associations
+	if err := tx.Model(&card).Association("Tags").Clear(); err != nil {
+		tx.Rollback()
 		return err
 	}
-	return r.db.WithContext(ctx).Preload("Tags").First(card, "id = ?", card.ID).Error
+	// Save the card with new tags
+	card.Tags = tags
+	if err := tx.Save(card).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	// Reload the card with tags
+	if err := tx.Preload("Tags").First(&card, "id = ?", card.ID).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Commit the transaction
+	return tx.Commit().Error
 }
 
 func (r *cardRepository) Delete(ctx context.Context, id uuid.UUID) error {
