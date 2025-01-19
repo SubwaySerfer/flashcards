@@ -60,7 +60,10 @@ func main() {
 		cards := v1.Group("/cards")
 		{
 			cards.POST("/", cardHandler.CreateCard)
-			// Add other routes here
+			cards.GET("/:id", cardHandler.GetCard)
+			cards.PUT("/:id", cardHandler.UpdateCard)
+			cards.DELETE("/:id", cardHandler.DeleteCard)
+			cards.GET("/", cardHandler.ListCards)
 		}
 		tags := v1.Group("/tags")
 		{

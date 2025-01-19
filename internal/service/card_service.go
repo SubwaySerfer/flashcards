@@ -8,16 +8,16 @@ import (
 	"fmt"
 	"os"
 
-	_ "github.com/google/uuid"
+	"github.com/google/uuid"
 	_ "github.com/lib/pq"
 )
 
 type CardService interface {
 	CreateCard(ctx context.Context, card *domain.Card) error
-	//GetCard(ctx context.Context, id uuid.UUID) (*domain.Card, error)
-	//UpdateCard(ctx context.Context, card *domain.Card) error
-	//DeleteCard(ctx context.Context, id uuid.UUID) error
-	//ListCards(ctx context.Context, filters map[string]interface{}) ([]domain.Card, error)
+	GetCard(ctx context.Context, id uuid.UUID) (*domain.Card, error)
+	UpdateCard(ctx context.Context, card *domain.Card) error
+	DeleteCard(ctx context.Context, id uuid.UUID) error
+	ListCards(ctx context.Context) ([]domain.Card, error)
 	//FindCardsByTags(ctx context.Context, tags []string) ([]domain.Card, error)
 	CreateDatabase(ctx context.Context) error
 }
@@ -32,6 +32,22 @@ func NewCardService(repo repository.CardRepository) CardService {
 
 func (s *cardService) CreateCard(ctx context.Context, card *domain.Card) error {
 	return s.repo.Create(ctx, card)
+}
+
+func (s *cardService) GetCard(ctx context.Context, id uuid.UUID) (*domain.Card, error) {
+	return s.repo.GetByID(ctx, id)
+}
+
+func (s *cardService) UpdateCard(ctx context.Context, card *domain.Card) error {
+	return s.repo.Update(ctx, card)
+}
+
+func (s *cardService) DeleteCard(ctx context.Context, id uuid.UUID) error {
+	return s.repo.Delete(ctx, id)
+}
+
+func (s *cardService) ListCards(ctx context.Context) ([]domain.Card, error) {
+	return s.repo.List(ctx)
 }
 
 func (s *cardService) CreateDatabase(ctx context.Context) error {
