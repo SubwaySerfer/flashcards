@@ -45,7 +45,12 @@ func main() {
 	logger.Info("Attempting database connection",
 		zap.String("database_url", dsn))
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	gormConfig := &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+		PrepareStmt:                              false,
+	}
+
+	db, err := gorm.Open(postgres.Open(dsn), gormConfig)
 	if err != nil {
 		logger.Fatal("Failed to connect to database",
 			zap.Error(err))
@@ -55,13 +60,16 @@ func main() {
 	// Auto migrate the schema
 	logger.Info("Starting database migration")
 
-	hasTable := db.Migrator().HasTable(&domain.Card{})
-	if !hasTable {
+	hasCard := db.Migrator().HasTable(&domain.Card{})
+	hasTag := db.Migrator().HasTable(&domain.Tag{})
+	hasProgress := db.Migrator().HasTable(&domain.LearningProgress{})
+
+	if !hasCard || !hasTag || !hasProgress {
 		if err := db.AutoMigrate(&domain.Card{}, &domain.Tag{}, &domain.LearningProgress{}); err != nil {
 			logger.Fatal("Failed to migrate database schema", zap.Error(err))
 		}
-		logger.Info("Database migration completed")
 	}
+	logger.Info("Database migration completed")
 
 	// Initialize repositories
 	logger.Debug("Initializing repositories")
