@@ -54,12 +54,14 @@ func main() {
 
 	// Auto migrate the schema
 	logger.Info("Starting database migration")
-	err = db.AutoMigrate(&domain.Card{}, &domain.Tag{}, &domain.LearningProgress{})
-	if err != nil {
-		logger.Fatal("Failed to migrate database schema",
-			zap.Error(err))
+
+	hasTable := db.Migrator().HasTable(&domain.Card{})
+	if !hasTable {
+		if err := db.AutoMigrate(&domain.Card{}, &domain.Tag{}, &domain.LearningProgress{}); err != nil {
+			logger.Fatal("Failed to migrate database schema", zap.Error(err))
+		}
+		logger.Info("Database migration completed")
 	}
-	logger.Info("Database migration completed")
 
 	// Initialize repositories
 	logger.Debug("Initializing repositories")
