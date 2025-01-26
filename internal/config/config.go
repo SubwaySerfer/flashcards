@@ -17,6 +17,7 @@ type ServerConfig struct {
 }
 
 type DatabaseConfig struct {
+	Url      string `default:""`
 	Host     string `default:"localhost"`
 	Port     string `default:"5432"`
 	User     string `default:"postgres"`
@@ -36,6 +37,7 @@ func NewConfig() *Config {
 			Port: "8081",
 		},
 		Database: DatabaseConfig{
+			Url:      os.Getenv("DATABASE_URL"),
 			Host:     os.Getenv("DB_HOST"),
 			Port:     os.Getenv("DB_PORT"),
 			User:     os.Getenv("DB_USER"),

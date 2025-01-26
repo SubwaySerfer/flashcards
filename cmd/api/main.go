@@ -6,7 +6,6 @@ import (
 	"flashcards/internal/handler"
 	"flashcards/internal/repository"
 	"flashcards/internal/service"
-	"fmt"
 	"log"
 	"time"
 
@@ -25,14 +24,7 @@ func main() {
 	cfg := config.NewConfig()
 
 	// Initialize DB
-	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=%s",
-		cfg.Database.User,
-		cfg.Database.Password,
-		cfg.Database.Host,
-		cfg.Database.Port,
-		cfg.Database.DBName,
-		cfg.Database.SSLMode,
-	)
+	dsn := cfg.Database.Url
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -59,7 +51,7 @@ func main() {
 
 	// Add CORS middleware with custom configuration
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{"http://localhost:5173", "https://flashcards-service.netlify.app"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		ExposeHeaders:    []string{"Content-Length"},
