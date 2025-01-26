@@ -25,12 +25,12 @@ func main() {
 	cfg := config.NewConfig()
 
 	// Initialize DB
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
-		cfg.Database.Host,
+	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.Database.User,
 		cfg.Database.Password,
-		cfg.Database.DBName,
+		cfg.Database.Host,
 		cfg.Database.Port,
+		cfg.Database.DBName,
 		cfg.Database.SSLMode,
 	)
 
