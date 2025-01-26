@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig
-	Database DatabaseConfig
+	Server      ServerConfig
+	Database    DatabaseConfig
+	Environment string
 }
 
 type ServerConfig struct {
