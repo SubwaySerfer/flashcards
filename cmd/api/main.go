@@ -8,6 +8,7 @@ import (
 	"flashcards/internal/service"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -56,19 +57,15 @@ func main() {
 	// Setup router
 	r := gin.Default()
 
-	// Add CORS middleware
+	// Add CORS middleware with custom configuration
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
 	}))
-	r.Use(gin.Logger())
-	r.Use(func(c *gin.Context) {
-		log.Printf("Request: %s %s", c.Request.Method, c.Request.URL)
-		c.Next()
-	})
 
 	v1 := r.Group("/api/v1")
 	{
