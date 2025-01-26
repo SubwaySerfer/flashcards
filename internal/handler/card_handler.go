@@ -117,3 +117,13 @@ func (h *CardHandler) ListCards(c *gin.Context) {
 
 	c.JSON(http.StatusOK, cards)
 }
+
+func (h *CardHandler) GetRandomCard(c *gin.Context) {
+	card, err := h.cardService.GetRandomCard(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, card)
+}

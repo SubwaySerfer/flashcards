@@ -40,3 +40,6 @@ Content-Type: application/json
 
 ### Delete a card
 DELETE {{url}}/api/v1/cards/{{cardId}}
+
+### Get random card
+GET {{url}}/api/v1/cards/random/

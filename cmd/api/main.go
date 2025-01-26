@@ -76,6 +76,7 @@ func main() {
 			cards.PUT("/:id", cardHandler.UpdateCard)
 			cards.DELETE("/:id", cardHandler.DeleteCard)
 			cards.GET("/", cardHandler.ListCards)
+			cards.GET("/random", cardHandler.GetRandomCard)
 		}
 		tags := v1.Group("/tags")
 		{

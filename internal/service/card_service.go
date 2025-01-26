@@ -19,6 +19,7 @@ type CardService interface {
 	ListCards(ctx context.Context) ([]domain.Card, error)
 	CreateCard(ctx context.Context, card *domain.Card, tagIDs []uuid.UUID) error
 	CreateDatabase(ctx context.Context) error
+	GetRandomCard(ctx context.Context) (*domain.Card, error)
 }
 
 type cardService struct {
@@ -86,4 +87,8 @@ func (s *cardService) CreateDatabase(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (s *cardService) GetRandomCard(ctx context.Context) (*domain.Card, error) {
+	return s.repo.GetRandomCard(ctx)
 }

@@ -16,6 +16,7 @@ type CardRepository interface {
 	ListCards(ctx context.Context) ([]domain.Card, error)
 	GetTagsByIds(ctx context.Context, ids []uuid.UUID, tags *[]domain.Tag) error
 	//FindByTags(ctx context.Context, tags []string) ([]domain.Card, error)
+	GetRandomCard(ctx context.Context) (*domain.Card, error)
 }
 
 type cardRepository struct {
@@ -83,4 +84,13 @@ func (r *cardRepository) ListCards(ctx context.Context) ([]domain.Card, error) {
 
 func (r *cardRepository) GetTagsByIds(ctx context.Context, ids []uuid.UUID, tags *[]domain.Tag) error {
 	return r.db.WithContext(ctx).Where("id IN ?", ids).Find(tags).Error
+}
+
+func (r *cardRepository) GetRandomCard(ctx context.Context) (*domain.Card, error) {
+	var card domain.Card
+	err := r.db.WithContext(ctx).
+		Preload("Tags").
+		Order("RANDOM()").
+		First(&card).Error
+	return &card, err
 }
