@@ -36,12 +36,12 @@ func NewConfig() *Config {
 			Port: "8081",
 		},
 		Database: DatabaseConfig{
-			Host:     "localhost",
+			Host:     os.Getenv("DB_HOST"),
 			Port:     os.Getenv("DB_PORT"),
-			User:     "postgres",
+			User:     os.Getenv("DB_USER"),
 			Password: os.Getenv("DB_PASSWORD"),
-			DBName:   "flashcards",
-			SSLMode:  "disable",
+			DBName:   os.Getenv("DB_NAME"),
+			SSLMode:  os.Getenv("DB_SSLMODE"),
 		},
 	}
 }
